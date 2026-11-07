@@ -16,6 +16,11 @@ import {
 } from 'lucide-react';
 import { VaultDocumentCategory, ApplicationRecord } from '../../types';
 import { useToast } from '../ui/Toast';
+import {
+  validateDocumentFile,
+  ALLOWED_EXTENSIONS,
+  MAX_FILE_SIZE_BYTES,
+} from '../../utils/documentValidation';
 
 interface UploadDocumentModalProps {
   isOpen: boolean;
@@ -33,9 +38,6 @@ interface UploadDocumentModalProps {
   ) => Promise<void>;
   applications: ApplicationRecord[];
 }
-
-const ALLOWED_EXTENSIONS = ['pdf', 'doc', 'docx', 'png', 'jpg', 'jpeg'];
-const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024; // 15 MB limit
 
 export const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
   isOpen,
@@ -70,39 +72,31 @@ export const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
 
   if (!isOpen) return null;
 
-  const validateAndSetFile = (file: File) => {
+  const validateAndSetFile = async (file: File): Promise<boolean> => {
     setValidationError(null);
 
-    // 1. Validate file extension
-    const ext = file.name.split('.').pop()?.toLowerCase() || '';
-    if (!ALLOWED_EXTENSIONS.includes(ext)) {
-      setValidationError(
-        `Invalid file type ".${ext}". Supported formats are PDF, DOC, DOCX, PNG, and JPG.`
-      );
-      showToast(`Unsupported file format .${ext}`, 'warning');
-      return false;
-    }
-
-    // 2. Validate file size (15 MB maximum)
-    if (file.size > MAX_FILE_SIZE_BYTES) {
-      setValidationError(
-        `File size (${(file.size / 1048576).toFixed(1)} MB) exceeds the 15 MB limit.`
-      );
-      showToast('File size exceeds the 15 MB limit.', 'warning');
+    const result = await validateDocumentFile(file);
+    if (!result.isValid) {
+      const errorMsg = result.error || 'Invalid file format or content signature.';
+      setValidationError(errorMsg);
+      showToast(errorMsg, 'warning');
+      setSelectedFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       return false;
     }
 
     setSelectedFile(file);
-    if (!docTitle) {
-      const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
-      setDocTitle(cleanName);
+    if (!docTitle && result.sanitizedTitle) {
+      setDocTitle(result.sanitizedTitle);
     }
     return true;
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      validateAndSetFile(e.target.files[0]);
+      await validateAndSetFile(e.target.files[0]);
     }
   };
 
@@ -115,11 +109,11 @@ export const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
     setIsDragging(false);
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      validateAndSetFile(e.dataTransfer.files[0]);
+      await validateAndSetFile(e.dataTransfer.files[0]);
     }
   };
 
@@ -127,6 +121,14 @@ export const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
     e.preventDefault();
     if (!selectedFile) {
       setValidationError('Please select or drag a valid file to upload.');
+      return;
+    }
+
+    // Defensive re-validation before committing to storage
+    const recheck = await validateDocumentFile(selectedFile);
+    if (!recheck.isValid) {
+      setValidationError(recheck.error || 'File validation failed.');
+      showToast(recheck.error || 'File validation failed.', 'warning');
       return;
     }
 
@@ -268,7 +270,11 @@ export const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
 
             {/* Validation Error Banner */}
             {validationError && (
-              <div className="p-3 rounded-[12px] bg-[#ff78c5]/20 border-[1.5px] border-[#252b3a] text-[#253044] font-bold text-xs flex items-center gap-2">
+              <div
+                role="alert"
+                aria-live="polite"
+                className="p-3 rounded-[12px] bg-[#ff78c5]/20 border-[1.5px] border-[#252b3a] text-[#253044] font-bold text-xs flex items-center gap-2"
+              >
                 <AlertCircle className="w-4 h-4 shrink-0 text-[#253044]" />
                 <span>{validationError}</span>
               </div>
