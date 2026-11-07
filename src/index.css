@@ -1,0 +1,305 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: light !important;
+    /* Playful Geometric Design System Core Tokens */
+    --dp-color-ground: #fffdf5;
+    --dp-color-panel: #ffffff;
+    --dp-color-ink: #253044;
+    --dp-color-outline: #252b3a;
+    --dp-color-accent: #6434df;
+    --dp-color-accent-secondary: #ff78c5;
+    --dp-color-accent-warm: #ffd05b;
+    --dp-color-accent-fresh: #9bf1cd;
+    --dp-color-field-soft: #e9fff5;
+    --dp-color-selection: #f1ebff;
+    --dp-color-rule-muted: #b8b6c5;
+
+    /* Fonts */
+    --font-display: 'Host Grotesk', system-ui, -apple-system, sans-serif;
+    --font-reading: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+
+    /* Corner Radius standard */
+    --radius-geo: 17px;
+  }
+
+  body {
+    color-scheme: light !important;
+    background-color: var(--dp-color-ground) !important;
+    color: var(--dp-color-ink) !important;
+    font-family: var(--font-reading);
+    overflow-x: hidden;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .font-heading,
+  .font-display,
+  .PlayfulGeometricDisplay {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--dp-color-ink);
+  }
+
+  p,
+  span,
+  label,
+  input,
+  button,
+  select,
+  textarea,
+  .font-reading,
+  .font-body,
+  .PlayfulGeometricReading {
+    font-family: var(--font-reading);
+  }
+
+  ::selection {
+    background-color: var(--dp-color-selection);
+    color: var(--dp-color-accent);
+  }
+}
+
+/* Playful Geometric Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dp-color-ground);
+  border-left: 2px solid var(--dp-color-rule-muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dp-color-rule-muted);
+  border: 2px solid var(--dp-color-outline);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dp-color-accent);
+}
+
+/* Hard Offset Shadow & Outline Component Utilities */
+.geo-panel {
+  background-color: var(--dp-color-panel);
+  border: 2.5px solid var(--dp-color-outline);
+  border-radius: 17px;
+  box-shadow: 4px 4px 0px var(--dp-color-outline);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.geo-panel-interactive {
+  background-color: var(--dp-color-panel);
+  border: 2.5px solid var(--dp-color-outline);
+  border-radius: 17px;
+  box-shadow: 4px 4px 0px var(--dp-color-outline);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.geo-panel-interactive:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--dp-color-outline);
+}
+
+.geo-panel-interactive:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px var(--dp-color-outline);
+}
+
+/* Important Feature Panel with Violet Offset Backing */
+.geo-panel-feature {
+  background-color: var(--dp-color-panel);
+  border: 2.5px solid var(--dp-color-outline);
+  border-radius: 17px;
+  box-shadow: 6px 6px 0px var(--dp-color-accent);
+  position: relative;
+}
+
+.geo-panel-pink {
+  background-color: var(--dp-color-panel);
+  border: 2.5px solid var(--dp-color-outline);
+  border-radius: 17px;
+  box-shadow: 5px 5px 0px var(--dp-color-accent-secondary);
+}
+
+.geo-panel-warm {
+  background-color: var(--dp-color-panel);
+  border: 2.5px solid var(--dp-color-outline);
+  border-radius: 17px;
+  box-shadow: 5px 5px 0px var(--dp-color-accent-warm);
+}
+
+.geo-panel-fresh {
+  background-color: var(--dp-color-panel);
+  border: 2.5px solid var(--dp-color-outline);
+  border-radius: 17px;
+  box-shadow: 5px 5px 0px var(--dp-color-accent-fresh);
+}
+
+/* Playful Geometric Buttons */
+.geo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2.5px solid var(--dp-color-outline);
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  user-select: none;
+}
+
+.geo-btn:focus-visible {
+  outline: 3px solid var(--dp-color-accent-secondary);
+  outline-offset: 2px;
+}
+
+.geo-btn-primary {
+  background-color: var(--dp-color-accent);
+  color: #ffffff;
+  box-shadow: 3px 3px 0px var(--dp-color-outline);
+}
+
+.geo-btn-primary:hover {
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4.5px 4.5px 0px var(--dp-color-outline);
+  background-color: #5527cb;
+}
+
+.geo-btn-primary:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 1px 1px 0px var(--dp-color-outline);
+}
+
+.geo-btn-secondary {
+  background-color: #ffffff;
+  color: var(--dp-color-ink);
+  box-shadow: 3px 3px 0px var(--dp-color-outline);
+}
+
+.geo-btn-secondary:hover {
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4.5px 4.5px 0px var(--dp-color-outline);
+  background-color: #f8fafc;
+}
+
+.geo-btn-secondary:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 1px 1px 0px var(--dp-color-outline);
+}
+
+.geo-btn-warm {
+  background-color: var(--dp-color-accent-warm);
+  color: var(--dp-color-ink);
+  box-shadow: 3px 3px 0px var(--dp-color-outline);
+}
+
+.geo-btn-warm:hover {
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4.5px 4.5px 0px var(--dp-color-outline);
+  background-color: #f5c44c;
+}
+
+.geo-btn-fresh {
+  background-color: var(--dp-color-accent-fresh);
+  color: var(--dp-color-ink);
+  box-shadow: 3px 3px 0px var(--dp-color-outline);
+}
+
+.geo-btn-fresh:hover {
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4.5px 4.5px 0px var(--dp-color-outline);
+  background-color: #8be5be;
+}
+
+.geo-btn-pink {
+  background-color: var(--dp-color-accent-secondary);
+  color: var(--dp-color-ink);
+  box-shadow: 3px 3px 0px var(--dp-color-outline);
+}
+
+.geo-btn-pink:hover {
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4.5px 4.5px 0px var(--dp-color-outline);
+  background-color: #f768b8;
+}
+
+/* Form Controls */
+.geo-input {
+  background-color: #ffffff;
+  color: var(--dp-color-ink);
+  border: 2px solid var(--dp-color-outline);
+  border-radius: 12px;
+  padding: 0.625rem 0.875rem;
+  font-family: var(--font-reading);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 180ms ease;
+  box-shadow: 2px 2px 0px var(--dp-color-outline);
+}
+
+.geo-input:focus {
+  outline: none;
+  border-color: var(--dp-color-accent);
+  box-shadow: 3px 3px 0px var(--dp-color-accent);
+}
+
+/* Small Colored Section Identification Tabs */
+.geo-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border: 2px solid var(--dp-color-outline);
+  border-bottom: none;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Outlined Badges & Pills */
+.geo-badge-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 2px solid var(--dp-color-outline);
+  border-radius: 9999px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  padding: 0.15rem 0.6rem;
+  box-shadow: 1.5px 1.5px 0px var(--dp-color-outline);
+}
+
+/* Accessibility: Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

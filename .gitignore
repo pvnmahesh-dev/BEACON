@@ -1,0 +1,58 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies & Build Outputs
+node_modules
+dist
+dist-ssr
+*.local
+*.tsbuildinfo
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Nested duplicate project
+/scholarship-platform/
+
+# Temporary screenshots and visual tests
+/actual_desktop_screenshot.png
+/current_*.png
+/final_screenshot_*.png
+/fresh_before_inspection.png
+/live_*.png
+/screenshot_*.png
+/test_dark_media.png
+/scratch_*.png
+/verified_*.png
+
+# Temporary audit and browser scripts
+/audit_*.js
+/capture_*.js
+/capture_*.ps1
+/inspect_*.mjs
+/scan_colors.*
+/scratch_*.mjs
+/verify_*.js
+/verify_*.mjs
+/measure_*.ps1
+/crop_logo.ps1
