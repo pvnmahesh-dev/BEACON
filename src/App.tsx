@@ -1,7 +1,6 @@
-import React, { useState, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useMemo, Suspense, lazy, useRef } from 'react';
 import { Sidebar } from './components/layout/Sidebar';
 import { TopNavbar } from './components/layout/TopNavbar';
-import { MobileNav } from './components/layout/MobileNav';
 import { WelcomeBanner } from './components/dashboard/WelcomeBanner';
 import { StatCards } from './components/dashboard/StatCards';
 import { RecommendationSection } from './components/dashboard/RecommendationSection';
@@ -70,7 +69,8 @@ const PageLoadingFallback: React.FC = () => (
 const DashboardContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [selectedScholarship, setSelectedScholarship] = useState<Scholarship | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -161,30 +161,21 @@ const DashboardContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fffdf5] text-[#253044] font-reading flex selection:bg-[#f1ebff] selection:text-[#6434df]">
-      {/* Premium Desktop Sidebar */}
+    <div className="min-h-screen bg-[#fffdf5] text-[#253044] font-reading flex flex-col selection:bg-[#f1ebff] selection:text-[#6434df]">
+      {/* Premium Collapsible Navigation Sidebar (Hidden by default, slides in from left) */}
       <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         applicationsCount={applicationsState.fundingAnalytics.activeCount}
         vaultCount={vaultState.vaultStats.totalCount}
-        className="hidden lg:flex"
+        menuButtonRef={menuButtonRef}
       />
 
-      {/* Responsive Mobile Navigation Drawer */}
-      <MobileNav
-        isOpen={isMobileNavOpen}
-        onClose={() => setIsMobileNavOpen(false)}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        applicationsCount={applicationsState.fundingAnalytics.activeCount}
-        vaultCount={vaultState.vaultStats.totalCount}
-        user={profile}
-      />
-
-      {/* Main Content Column */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Navbar */}
+      {/* Main Content Column using Full Available Width */}
+      <div className="flex-1 flex flex-col min-w-0 w-full">
+        {/* Top Navbar with accessible Menu Toggle button visible on all viewports */}
         <TopNavbar
           user={profile}
           searchQuery={searchQuery}
@@ -195,8 +186,11 @@ const DashboardContent: React.FC = () => {
               setActiveTab('discover');
             }
           }}
-          onOpenMobileMenu={() => setIsMobileNavOpen(true)}
+          isSidebarOpen={isSidebarOpen}
+          onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+          menuButtonRef={menuButtonRef}
           onNavigateToProfile={() => setActiveTab('profile')}
+          onNavigateToDashboard={() => setActiveTab('dashboard')}
         />
 
         {/* Dynamic Main Body based on Active Tab with Suspense fallback for code-split chunks */}

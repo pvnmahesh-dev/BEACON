@@ -16,22 +16,30 @@ interface TopNavbarProps {
   user: UserProfile;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  onOpenMobileMenu: () => void;
+  isSidebarOpen?: boolean;
+  onToggleSidebar?: () => void;
+  menuButtonRef?: React.RefObject<HTMLButtonElement | null>;
+  onOpenMobileMenu?: () => void;
   onOpenNewApplication?: () => void;
   onNavigateToProfile?: () => void;
   onNavigateToVault?: () => void;
   onResetDemoData?: () => void;
+  onNavigateToDashboard?: () => void;
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
   user,
   searchQuery,
   setSearchQuery,
+  isSidebarOpen = false,
+  onToggleSidebar,
+  menuButtonRef,
   onOpenMobileMenu,
   onOpenNewApplication,
   onNavigateToProfile,
   onNavigateToVault,
   onResetDemoData,
+  onNavigateToDashboard,
 }) => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -76,21 +84,38 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
   return (
     <header className="h-[72px] bg-[#fffdf5] border-b-[2.5px] border-[#252b3a] sticky top-0 z-40 px-4 sm:px-8 flex items-center justify-between gap-4">
-      {/* Left Area: Mobile Menu Toggle & Search Bar */}
+      {/* Left Area: Accessible Menu Toggle, Brand Logo & Global Search */}
       <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-2xl">
         <button
-          onClick={onOpenMobileMenu}
-          className="lg:hidden p-2.5 rounded-[12px] bg-white border-2 border-[#252b3a] text-[#253044] shadow-[2px_2px_0px_#252b3a] hover:bg-[#f1ebff] transition-all cursor-pointer"
-          aria-label="Open mobile navigation"
+          ref={menuButtonRef}
+          onClick={onToggleSidebar || onOpenMobileMenu}
+          className="p-2.5 rounded-[12px] bg-white border-2 border-[#252b3a] text-[#253044] shadow-[2px_2px_0px_#252b3a] hover:bg-[#f1ebff] hover:text-[#6434df] focus-visible:ring-2 focus-visible:ring-[#6434df] focus:outline-none transition-all cursor-pointer shrink-0"
+          aria-label={isSidebarOpen ? 'Close navigation sidebar' : 'Open navigation sidebar'}
+          aria-expanded={isSidebarOpen}
         >
           <Menu className="w-5 h-5 stroke-[2.5]" />
         </button>
 
-        <img
-          src="/beacon-icon.png"
-          alt="BEACON"
-          className="lg:hidden w-8 h-8 object-contain shrink-0 select-none"
-        />
+        {/* Brand Logo in Top Navbar */}
+        <div
+          onClick={onNavigateToDashboard}
+          className="flex items-center gap-2 cursor-pointer select-none shrink-0 hover:opacity-90 transition-opacity"
+          title="BEACON - Return to Dashboard"
+        >
+          <img
+            src="/beacon-logo.png"
+            alt="BEACON"
+            className="h-8 md:h-9 w-auto object-contain hidden sm:block"
+          />
+          <img
+            src="/beacon-icon.png"
+            alt="BEACON"
+            className="h-8 w-8 object-contain sm:hidden"
+          />
+          <span className="hidden md:inline-block text-[10px] font-black px-1.5 py-0.5 rounded-md bg-[#9bf1cd] text-[#253044] border-2 border-[#252b3a] shadow-[1px_1px_0px_#252b3a]">
+            v2.4
+          </span>
+        </div>
 
         {/* Global Search with Playful Geometric Input */}
         <div className="relative flex-1 group">
